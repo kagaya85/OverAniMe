@@ -13,9 +13,9 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown text="Lang" right>
-            <b-dropdown-item href="#">EN</b-dropdown-item>
-            <b-dropdown-item href="#">JA</b-dropdown-item>
-            <b-dropdown-item href="#">ZH</b-dropdown-item>
+            <b-dropdown-item-button @click="changeLocale($event)" value="en">EN</b-dropdown-item-button>
+            <b-dropdown-item-button @click="changeLocale($event)" value="ja">JA</b-dropdown-item-button>
+            <b-dropdown-item-button @click="changeLocale($event)" value="zh_cn">ZH</b-dropdown-item-button>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -71,9 +71,7 @@ export default {
   mounted() {
     var that = this
     if(document.body.clientWidth < window.innerHeight) // 移动端 长 == 宽
-    {
       this.$refs.graph.style.height = `${this.$refs.graph.clientWidth}px`
-    }
     else  // PC 等于视窗高度 - navbar高度
       this.$refs.graph.style.height = `${window.innerHeight - 100}px`
 
@@ -85,7 +83,10 @@ export default {
     };
   },
   methods: {
-    onSubmit: function() {}
+    onSubmit: function() {},
+    changeLocale: function(event) {
+      this.$i18n.locale = event.currentTarget.value;
+    }
   }
 };
 </script>
