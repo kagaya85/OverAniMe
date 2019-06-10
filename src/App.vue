@@ -23,7 +23,7 @@
 
     <b-container fluid class="">
       <b-row class="main-row">
-        <b-col md="4" class="col-margin">
+        <b-col md="3" class="col-margin">
           <b-form @submit="onSubmit" class="">
             <label for="input">{{ $t("message") }}</label>
             <b-form-group :description="$t('message')">
@@ -45,7 +45,7 @@
           </b-list-group>
         </b-col>
 
-        <b-col md="8" class="col-margin">
+        <b-col md="9" class="col-margin">
           <div ref="graph" class="graph"></div>
         </b-col>
       </b-row>
@@ -70,16 +70,18 @@ export default {
   },
   mounted() {
     var that = this
-    if(document.body.clientWidth < 690) // 移动端 长 == 宽
+    if(document.body.clientWidth < window.innerHeight) // 移动端 长 == 宽
+    {
       this.$refs.graph.style.height = `${this.$refs.graph.clientWidth}px`
+    }
     else  // PC 等于视窗高度 - navbar高度
-      this.$refs.graph.style.height = `${document.body.clientHeight - 100}px`
+      this.$refs.graph.style.height = `${window.innerHeight - 100}px`
 
     window.onresize = function resizeGraph() {
-      if(document.body.clientWidth < 690)
+      if(document.body.clientWidth < window.innerHeight)
         that.$refs.graph.style.height = `${that.$refs.graph.clientWidth}px`
       else  // PC 等于视窗高度 - navbar高度
-        that.$refs.graph.style.height = `${document.body.clientHeight - 100}px`
+        that.$refs.graph.style.height = `${window.innerHeight - 100}px`
     };
   },
   methods: {
@@ -89,10 +91,10 @@ export default {
 </script>
 
 <style>
+
 #app {
-  position: relative;
-  height: 100vh;
   background-color: #dddddd;
+  min-height: 100vh;
 }
 
 .navbar {
