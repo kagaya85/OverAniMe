@@ -30,7 +30,7 @@
     <b-container fluid class="">
       <b-row class="main-row">
         <b-col md="3" class="col-margin">
-          <b-form @submit="onSubmit" class="">
+          <b-form @submit.prevent="onSubmit" class="">
             <label for="input">{{ $t("message") }}</label>
             <b-form-group>
               <b-form-input
@@ -49,7 +49,7 @@
           </b-form>
 
           <b-list-group class="reclist">
-            <b-list-group-item v-for="(item, index) in recList" :key="index">{{
+            <b-list-group-item href="#" v-for="(item, index) in recList" :key="index" @click="onSubmit">{{
               item
             }}</b-list-group-item>
           </b-list-group>
