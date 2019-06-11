@@ -32,16 +32,20 @@
         <b-col md="3" class="col-margin">
           <b-form @submit="onSubmit" class="">
             <label for="input">{{ $t("message") }}</label>
-            <b-form-group :description="$t('message')">
+            <b-form-group>
               <b-form-input
                 id="input"
                 required
                 :placehloder="$t('message')"
               ></b-form-input>
             </b-form-group>
-            <b-button type="submit" variant="primary">{{
-              $t("message")
-            }}</b-button>
+            <b-row align-h="end">
+              <b-col cols="auto">
+                <b-button type="submit" variant="primary">{{
+                  $t("message")
+                }}</b-button>
+              </b-col>
+            </b-row>
           </b-form>
 
           <b-list-group class="reclist">
@@ -53,7 +57,7 @@
 
         <b-col md="9" class="col-margin">
           <div ref="graphContainer" class="graph-container">
-            <KnowledgeGraph ref="graph"></KnowledgeGraph>
+            <KnowledgeGraph ref="graph" :triple-list="tripleList"></KnowledgeGraph>
           </div>
         </b-col>
       </b-row>
@@ -72,11 +76,22 @@ export default {
   data() {
     return {
       recList: [
-        "Cras justo odio",
-        "Dapibus ac facilisis in",
-        "Morbi leo risus",
-        "Porta ac consectetur ac",
-        "Vestibulum at eros"
+        "New Game！！！",
+        "请问你要来点兔子吗？",
+        "假面骑士build",
+        "芳文社",
+        "Daring in the franxx"
+      ],
+      tripleList: [
+        {from: "请问您今天要来点兔子吗？", relation: "主角", to: "香风智乃"},
+        {from: "请问您今天要来点兔子吗？", relation: "主角", to: "保登心爱"},
+        {from: "请问您今天要来点兔子吗？", relation: "配角", to: "提比"},
+        {from: "请问您今天要来点兔子吗？", relation: "出版社", to: "芳文社"},
+        {from: "请问您今天要来点兔子吗？", relation: "标签", to: "百合"},
+        {from: "请问您今天要来点兔子吗？", relation: "标签", to: "日常"},
+        {from: "请问您今天要来点兔子吗？", relation: "声优", to: "水瀬いのり"},
+        {from: "请问您今天要来点兔子吗？", relation: "声优", to: "佐倉綾音"},
+        {from: "请问您今天要来点兔子吗？", relation: "动画制作", to: "WHITE FOX"},
       ]
     };
   },
@@ -84,7 +99,9 @@ export default {
     var that = this;
     if (document.body.clientWidth < window.innerHeight)
       // 移动端 长 == 宽
-      this.$refs.graphContainer.style.height = `${this.$refs.graphContainer.clientWidth}px`;
+      this.$refs.graphContainer.style.height = `${
+        this.$refs.graphContainer.clientWidth
+      }px`;
     else if (window.innerHeight > 700)
       // PC 等于视窗高度 - navbar高度
       that.$refs.graphContainer.style.height = `${window.innerHeight - 100}px`;
@@ -92,17 +109,22 @@ export default {
 
     window.onresize = function resizeGraph() {
       if (document.body.clientWidth < window.innerHeight)
-        that.$refs.graphContainer.style.height = `${that.$refs.graphContainer.clientWidth}px`;
+        that.$refs.graphContainer.style.height = `${
+          that.$refs.graphContainer.clientWidth
+        }px`;
       else if (window.innerHeight > 700)
         // PC 等于视窗高度 - navbar高度
-        that.$refs.graphContainer.style.height = `${window.innerHeight - 100}px`;
+        that.$refs.graphContainer.style.height = `${window.innerHeight -
+          100}px`;
       else that.$refs.graphContainer.style.height = `600px`;
     };
 
     this.$refs.graph.showGraph();
   },
   methods: {
-    onSubmit: function() {},
+    onSubmit: function() {
+      this.$refs.graph.showGraph()
+    },
     changeLocale: function(event) {
       this.$i18n.locale = event.currentTarget.value;
     }
@@ -131,6 +153,6 @@ export default {
 .graph-container {
   /* display: inline-block; */
   width: 100%;
-  background-color: #555555;
+  /* background-color: #555555; */
 }
 </style>
