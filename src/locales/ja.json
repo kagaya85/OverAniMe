@@ -1,5 +1,6 @@
 {
   "message": "何が知りたいですか？",
   "search": "検索",
-  "placeholder": "キーワードを入力"
+  "placeholder": "キーワードを入力",
+  "reclist": "おすすめ:"
 }

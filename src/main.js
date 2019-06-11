@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import './plugins/axios'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
 import i18n from './i18n'

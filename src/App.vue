@@ -41,7 +41,7 @@
             </b-form-group>
             <b-row align-h="end">
               <b-col cols="auto">
-                <b-button type="submit" variant="primary">{{
+                <b-button :disabled="disabled" type="submit" variant="primary">{{
                   $t("search")
                 }}</b-button>
               </b-col>
@@ -49,7 +49,8 @@
           </b-form>
 
           <b-list-group class="reclist">
-            <b-list-group-item href="#" v-for="(item, index) in recList" :key="index" @click="onSubmit">{{
+            <label>{{$t('reclist')}}</label>
+            <b-list-group-item button v-for="(item, index) in recList" :key="index" @click="onSubmit" :disabled="disabled">{{
               item
             }}</b-list-group-item>
           </b-list-group>
@@ -107,7 +108,8 @@ export default {
           relation: "动画制作",
           to: "WHITE FOX"
         }
-      ]
+      ],
+      disabled: false
     };
   },
   mounted() {
@@ -139,6 +141,14 @@ export default {
   methods: {
     onSubmit: function() {
       this.$refs.graph.showGraph();
+    
+      this.axios.get("").then(reponse => {
+
+      })
+      .catch(error => {
+        console.log(error)
+
+      })
     },
     changeLocale: function(event) {
       this.$i18n.locale = event.currentTarget.value;

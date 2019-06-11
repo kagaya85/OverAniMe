@@ -43,7 +43,7 @@ export default {
 
       console.log(this.nodes);
       console.log(this.edges);
-      
+
       var svg = d3.select("svg");
       svg.selectAll("*").remove();
       var svgRect = d3
@@ -68,12 +68,24 @@ export default {
         .data(this.edges)
         .enter()
         .append("line")
-        .attr("stroke", function(d, i) {
-          return colorScale(i);
+        .attr("stroke", d => {
+          return colorScale(d.type);
         })
-        .attr("stroke-width", 1)
+        .attr("stroke-width", 2)
         .attr("stroke-opacity", 0.8);
-
+      
+      // 边文字的容器
+      var textRect = g
+        .append("g")
+        .selectAll("rect")
+        .data(this.edges)
+        .enter()
+        .append("rect")
+        .attr("fill", "white")
+        .attr("stroke", d => {
+          return colorScale(d.type);
+        });
+      
       // 边的文字
       var linksText = g
         .append("g")
@@ -81,9 +93,17 @@ export default {
         .data(this.edges)
         .enter()
         .append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-size", "14px")
         .text(function(d) {
           return d.relation;
+        })
+        .each(function(d) {
+          d.width = this.getBBox().width; // 获取宽度
         });
+
+      // 添加完文字后给rect添加宽高
+      textRect.attr("width", d => d.width).attr("height", 20);
 
       var gs = g
         .selectAll(".circleText")
@@ -106,9 +126,10 @@ export default {
         });
       //文字
       gs.append("text")
-        .attr("x", -10)
         .attr("y", -20)
         .attr("dy", 5)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "18px")
         .text(function(d) {
           return d.name;
         });
@@ -137,6 +158,14 @@ export default {
             return (d.source.y + d.target.y) / 2;
           });
 
+        textRect
+          .attr("x", function(d) {
+            return (d.source.x + d.target.x - d.width) / 2;
+          })
+          .attr("y", function(d) {
+            return (d.source.y + d.target.y) / 2 - 15;
+          });
+
         gs.attr("transform", function(d, i) {
           return "translate(" + d.x + "," + d.y + ")";
         });
@@ -153,8 +182,8 @@ export default {
         .force("center")
         .x(width / 2)
         .y(height / 2);
-    
-      this.forceSimulation.restart()
+
+      this.forceSimulation.alpha(1).restart();
     },
     /**
      * 数据预处理
@@ -190,7 +219,8 @@ export default {
         this.edges.push({
           source: 0,
           target: index + 1,
-          relation: item.relation
+          relation: item.relation,
+          type: hashTable[item.relation]
         });
       });
     },
