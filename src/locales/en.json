@@ -1,5 +1,7 @@
 {
   "message": "What do you want to know?",
   "search" : "Search",
-  "placeholder": "Input key word here"
+  "placeholder": "Input key word here",
+  "about": "About",
+  "content": "Welcome to OveRaniMe!"
 }

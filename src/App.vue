@@ -7,7 +7,7 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item href="#">About</b-nav-item>
+          <b-nav-item v-b-modal.modal-1>About</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -57,11 +57,18 @@
 
         <b-col md="9" class="col-margin">
           <div ref="graphContainer" class="graph-container">
-            <KnowledgeGraph ref="graph" :triple-list="tripleList"></KnowledgeGraph>
+            <KnowledgeGraph
+              ref="graph"
+              :triple-list="tripleList"
+            ></KnowledgeGraph>
           </div>
         </b-col>
       </b-row>
     </b-container>
+
+    <b-modal id="modal-1" centered :title="$t('about')">
+      <p class="my-4">{{$t('content')}}</p>
+    </b-modal>
   </div>
 </template>
 
@@ -83,15 +90,23 @@ export default {
         "Daring in the franxx"
       ],
       tripleList: [
-        {from: "请问您今天要来点兔子吗？", relation: "主角", to: "香风智乃"},
-        {from: "请问您今天要来点兔子吗？", relation: "主角", to: "保登心爱"},
-        {from: "请问您今天要来点兔子吗？", relation: "配角", to: "提比"},
-        {from: "请问您今天要来点兔子吗？", relation: "出版社", to: "芳文社"},
-        {from: "请问您今天要来点兔子吗？", relation: "标签", to: "百合"},
-        {from: "请问您今天要来点兔子吗？", relation: "标签", to: "日常"},
-        {from: "请问您今天要来点兔子吗？", relation: "声优", to: "水瀬いのり"},
-        {from: "请问您今天要来点兔子吗？", relation: "声优", to: "佐倉綾音"},
-        {from: "请问您今天要来点兔子吗？", relation: "动画制作", to: "WHITE FOX"},
+        { from: "请问您今天要来点兔子吗？", relation: "主角", to: "香风智乃" },
+        { from: "请问您今天要来点兔子吗？", relation: "主角", to: "保登心爱" },
+        { from: "请问您今天要来点兔子吗？", relation: "配角", to: "提比" },
+        { from: "请问您今天要来点兔子吗？", relation: "出版社", to: "芳文社" },
+        { from: "请问您今天要来点兔子吗？", relation: "标签", to: "百合" },
+        { from: "请问您今天要来点兔子吗？", relation: "标签", to: "日常" },
+        {
+          from: "请问您今天要来点兔子吗？",
+          relation: "声优",
+          to: "水瀬いのり"
+        },
+        { from: "请问您今天要来点兔子吗？", relation: "声优", to: "佐倉綾音" },
+        {
+          from: "请问您今天要来点兔子吗？",
+          relation: "动画制作",
+          to: "WHITE FOX"
+        }
       ]
     };
   },
@@ -123,7 +138,7 @@ export default {
   },
   methods: {
     onSubmit: function() {
-      this.$refs.graph.showGraph()
+      this.$refs.graph.showGraph();
     },
     changeLocale: function(event) {
       this.$i18n.locale = event.currentTarget.value;
