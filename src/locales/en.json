@@ -1,3 +1,5 @@
 {
-  "message": "hello i18n !!"
+  "message": "What do you want to know?",
+  "search" : "Search",
+  "placeholder": "Input key word here"
 }

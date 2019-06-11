@@ -1,3 +1,5 @@
 {
-    "message": "こんにちは i18n !!"
-  }
+  "message": "何が知りたいですか？",
+  "search": "検索",
+  "placeholder": "キーワードを入力"
+}

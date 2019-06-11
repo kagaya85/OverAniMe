@@ -36,13 +36,13 @@
               <b-form-input
                 id="input"
                 required
-                :placehloder="$t('message')"
+                :placeholder="$t('placeholder')"
               ></b-form-input>
             </b-form-group>
             <b-row align-h="end">
               <b-col cols="auto">
                 <b-button type="submit" variant="primary">{{
-                  $t("message")
+                  $t("search")
                 }}</b-button>
               </b-col>
             </b-row>
