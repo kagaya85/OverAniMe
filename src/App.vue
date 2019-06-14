@@ -30,13 +30,14 @@
     <b-container fluid class="">
       <b-row class="main-row">
         <b-col md="3" class="col-margin">
-          <b-form @submit.prevent="onSubmit" class="">
+          <b-form @submit.prevent="onSubmit(query)" class="">
             <label for="input">{{ $t("message") }}</label>
             <b-form-group>
               <b-form-input
                 id="input"
                 required
                 :placeholder="$t('placeholder')"
+                v-model="query"
               ></b-form-input>
             </b-form-group>
             <b-row align-h="end">
@@ -49,8 +50,8 @@
           </b-form>
 
           <b-list-group class="reclist">
-            <label>{{$t('reclist')}}</label>
-            <b-list-group-item button v-for="(item, index) in recList" :key="index" @click="onSubmit" :disabled="disabled">{{
+            <label v-show="recList.length">{{$t('reclist')}}</label>
+            <b-list-group-item button v-for="(item, index) in recList" :key="index" @click="onSubmit(item)" :disabled="disabled">{{
               item
             }}</b-list-group-item>
           </b-list-group>
@@ -83,33 +84,10 @@ export default {
   },
   data() {
     return {
-      recList: [
-        "New Game！！！",
-        "请问你要来点兔子吗？",
-        "假面骑士build",
-        "芳文社",
-        "Daring in the franxx"
-      ],
-      tripleList: [
-        { from: "请问您今天要来点兔子吗？", relation: "主角", to: "香风智乃" },
-        { from: "请问您今天要来点兔子吗？", relation: "主角", to: "保登心爱" },
-        { from: "请问您今天要来点兔子吗？", relation: "配角", to: "提比" },
-        { from: "请问您今天要来点兔子吗？", relation: "出版社", to: "芳文社" },
-        { from: "请问您今天要来点兔子吗？", relation: "标签", to: "百合" },
-        { from: "请问您今天要来点兔子吗？", relation: "标签", to: "日常" },
-        {
-          from: "请问您今天要来点兔子吗？",
-          relation: "声优",
-          to: "水瀬いのり"
-        },
-        { from: "请问您今天要来点兔子吗？", relation: "声优", to: "佐倉綾音" },
-        {
-          from: "请问您今天要来点兔子吗？",
-          relation: "动画制作",
-          to: "WHITE FOX"
-        }
-      ],
-      disabled: false
+      recList: [],
+      tripleList: [],
+      disabled: false,
+      query: ""
     };
   },
   mounted() {
@@ -139,16 +117,32 @@ export default {
     this.$refs.graph.showGraph();
   },
   methods: {
-    onSubmit: function() {
-      this.$refs.graph.showGraph();
-    
-      this.axios.get("").then(reponse => {
-
+    onSubmit: function(head) {    
+      if(head == null)
+        return
+      // 禁用button
+      this.disabled = true
+      var data = {query : head}
+      // this.axios.get("test.json", data).then(response => {
+      this.axios.post("triple.php", data).then(response => {
+        this.tripleList = response.data.tripleList
+        this.$nextTick(() => {  // 在所有dom更新完毕后执行显示
+          this.$refs.graph.showGraph()
+        })
       })
       .catch(error => {
         console.log(error)
-
       })
+
+      this.axios.post("recommend.php", data).then(response => {
+        this.recList = response.data.recommend
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+      // 启用button
+      this.disabled = false
     },
     changeLocale: function(event) {
       this.$i18n.locale = event.currentTarget.value;

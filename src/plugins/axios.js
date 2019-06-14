@@ -1,5 +1,5 @@
 "use strict";
-
+import Qs from 'qs';
 import Vue from 'vue';
 import axios from "axios";
 
@@ -10,6 +10,13 @@ import axios from "axios";
 
 let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
+  baseURL: "./php/",
+  transformRequest: [function (data) {
+    data = Qs.stringify(data);
+    return data;
+  }],
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 };

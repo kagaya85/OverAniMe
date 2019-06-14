@@ -39,7 +39,8 @@ export default {
     showGraph: function() {
       // 预处理
       this.preprocess(this.tripleList);
-      if (this.nodes == null) return;
+
+      if (this.nodes.length == 0) return;
 
       console.log(this.nodes);
       console.log(this.edges);
@@ -73,19 +74,17 @@ export default {
         })
         .attr("stroke-width", 2)
         .attr("stroke-opacity", 0.8);
-      
+
       // 边文字的容器
-      var textRect = g
+      var lineTextRect = g
         .append("g")
         .selectAll("rect")
         .data(this.edges)
         .enter()
         .append("rect")
-        .attr("fill", "white")
-        .attr("stroke", d => {
-          return colorScale(d.type);
-        });
-      
+        .attr("fill", d => colorScale(d.type))
+        .attr("stroke",d => colorScale(d.type))
+
       // 边的文字
       var linksText = g
         .append("g")
@@ -103,7 +102,7 @@ export default {
         });
 
       // 添加完文字后给rect添加宽高
-      textRect.attr("width", d => d.width).attr("height", 20);
+      lineTextRect.attr("width", d => d.width).attr("height", 20);
 
       var gs = g
         .selectAll(".circleText")
@@ -124,15 +123,43 @@ export default {
         .attr("fill", function(d) {
           return colorScale(d.type);
         });
-      //文字
+      
+      // 结点文字的容器
+      var textRect = gs.append("rect")
+        .attr("y", -28)
+        .attr("fill", "white")
+        .attr("stroke", d => colorScale(d.type));
+
+      //节点文字
       gs.append("text")
-        .attr("y", -20)
-        .attr("dy", 5)
+        .attr("y", -12)
         .attr("text-anchor", "middle")
         .attr("font-size", "18px")
         .text(function(d) {
           return d.name;
+        })
+        .each(function(d) {
+          d.width = this.getBBox().width; // 获取宽度
         });
+
+      // 设置宽高
+      textRect.attr("width", d => d.width)
+        .attr("height", 20)
+        .attr("x", d => -d.width / 2);
+
+      var zoom = d3
+        .zoom()
+        .scaleExtent([0.8, 5]) //缩放范围
+        .on("zoom", zoomed);
+      
+      svg.call(zoom); // 在svg上缩放
+      
+      function zoomed() {
+        g.attr(
+          "transform", //此处的container是之前svg下 append('g')后返回的对象
+          "translate(" + d3.event.transform.x + "," + d3.event.transform.y + ") scale(" + d3.event.transform.k + ")"
+        );
+      }
 
       //生成节点数据
       this.forceSimulation.nodes(this.nodes).on("tick", function() {
@@ -158,7 +185,7 @@ export default {
             return (d.source.y + d.target.y) / 2;
           });
 
-        textRect
+        lineTextRect
           .attr("x", function(d) {
             return (d.source.x + d.target.x - d.width) / 2;
           })
@@ -166,7 +193,7 @@ export default {
             return (d.source.y + d.target.y) / 2 - 15;
           });
 
-        gs.attr("transform", function(d, i) {
+        gs.attr("transform", function(d) {
           return "translate(" + d.x + "," + d.y + ")";
         });
       });
@@ -175,7 +202,7 @@ export default {
       this.forceSimulation.force("link").links(this.edges);
 
       // 结点间斥力（负值）
-      this.forceSimulation.force("charge").strength(-width * 8);
+      this.forceSimulation.force("charge").strength(-width * 5);
 
       //设置图形的中心位置
       this.forceSimulation
@@ -190,7 +217,7 @@ export default {
      * @param {array} tripleList - 三元组集合
      */
     preprocess(tripleList) {
-      if (tripleList == null) return;
+      if (this.tripleList.length == 0) return;
 
       var hashTable = {};
       var rank = 1;
@@ -199,12 +226,11 @@ export default {
       this.edges = [];
 
       this.nodes.push({
-        name: tripleList[0].from,
+        name: tripleList[0].head,
         type: 0
       });
 
       tripleList.forEach((item, index) => {
-        let typenum;
         // 判断是否出现过该属性
         if (!hashTable.hasOwnProperty(item.relation)) {
           hashTable[item.relation] = rank;
@@ -212,7 +238,7 @@ export default {
         }
         // 添加结点
         this.nodes.push({
-          name: item.to,
+          name: item.tail,
           type: hashTable[item.relation]
         });
         // 添加边
