@@ -13,6 +13,6 @@ A web front-end of anime searching &amp; recommendation based on Knowledge Graph
 
 ## Technology Stack
 
-### Font-End
+### Front-End
 
 ​	Vue + Bootstrap + D3.js
